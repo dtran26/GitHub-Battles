@@ -1,14 +1,6 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-require('./index');
+var React = require("react");
+var ReactDOM = require("react-dom");
+require("./index.css");
+var App = require("./components/App");
 
-class App extends React.component {
-    render() {
-        return (
-            <div>
-                Hello world!
-            </div>
-        )
-    }
-
-}
+ReactDOM.render(<App />, document.getElementById("app"));
