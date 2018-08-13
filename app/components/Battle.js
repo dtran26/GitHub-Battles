@@ -1,36 +1,11 @@
 var React = require("react");
 var PropTypes = require("prop-types");
 var Link = require("react-router-dom").Link;
-
-function PlayerPreview(props) {
-  return (
-    <div>
-      <div className="column">
-        <img
-          className="avatar"
-          src={props.avatar}
-          alt={"Avator for" + props.username}
-        />
-        <h2 className="username">@{props.username}</h2>
-      </div>
-      <button className="reset" onClick={props.onReset.bind(null, props.id)}>
-        Reset
-      </button>
-    </div>
-  );
-}
-
-PlayerPreview.propType = {
-  avatar: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  onReset: PropTypes.func.isRequired
-};
+var PlayerPreview = require("./PlayerPreview");
 
 class PlayerInput extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       username: ""
     };
@@ -38,7 +13,6 @@ class PlayerInput extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleChange(event) {
     var value = event.target.value;
 
@@ -48,9 +22,9 @@ class PlayerInput extends React.Component {
       };
     });
   }
-
   handleSubmit(event) {
     event.preventDefault();
+
     this.props.onSubmit(this.props.id, this.state.username);
   }
   render() {
@@ -63,8 +37,8 @@ class PlayerInput extends React.Component {
           id="username"
           placeholder="github username"
           type="text"
-          autoComplete="off"
           value={this.state.username}
+          autoComplete="off"
           onChange={this.handleChange}
         />
         <button
@@ -85,10 +59,13 @@ PlayerInput.propTypes = {
   onSubmit: PropTypes.func.isRequired
 };
 
+PlayerInput.defaultProps = {
+  label: "Username"
+};
+
 class Battle extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       playerOneName: "",
       playerTwoName: "",
@@ -97,9 +74,7 @@ class Battle extends React.Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleReset = this.handleReset.bind(this);
   }
-
   handleSubmit(id, username) {
     this.setState(function() {
       var newState = {};
@@ -109,7 +84,6 @@ class Battle extends React.Component {
       return newState;
     });
   }
-
   handleReset(id) {
     this.setState(function() {
       var newState = {};
@@ -121,8 +95,8 @@ class Battle extends React.Component {
   render() {
     var match = this.props.match;
     var playerOneName = this.state.playerOneName;
-    var playerTwoName = this.state.playerTwoName;
     var playerOneImage = this.state.playerOneImage;
+    var playerTwoName = this.state.playerTwoName;
     var playerTwoImage = this.state.playerTwoImage;
 
     return (
@@ -137,12 +111,14 @@ class Battle extends React.Component {
           )}
 
           {playerOneImage !== null && (
-            <PlayerPreview
-              avatar={playerOneImage}
-              username={playerOneName}
-              onReset={this.handleReset}
-              id="playerOne"
-            />
+            <PlayerPreview avatar={playerOneImage} username={playerOneName}>
+              <button
+                className="reset"
+                onClick={this.handleReset.bind(this, "playerOne")}
+              >
+                Reset
+              </button>
+            </PlayerPreview>
           )}
 
           {!playerTwoName && (
@@ -154,12 +130,14 @@ class Battle extends React.Component {
           )}
 
           {playerTwoImage !== null && (
-            <PlayerPreview
-              avatar={playerTwoImage}
-              username={playerTwoName}
-              onReset={this.handleReset}
-              id="playerTwo"
-            />
+            <PlayerPreview avatar={playerTwoImage} username={playerTwoName}>
+              <button
+                className="reset"
+                onClick={this.handleReset.bind(this, "playerTwo")}
+              >
+                Reset
+              </button>
+            </PlayerPreview>
           )}
         </div>
 
